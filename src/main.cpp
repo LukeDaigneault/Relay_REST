@@ -10,7 +10,6 @@ int relay1_pin = 4;
 
 boolean relay1_state = false; // Turned on by default
 
-// See http://modtronix.com/mod-rly2-5v.html <- Active Low
 boolean relay_module_active = HIGH;  // Are the relays turned on by going HIGH or LOW?
 
 String page = "<!DOCTYPE html>\n<html>\n<head>\n<meta http-equiv=Content-Type content=\"text/html; charset=utf-8\" />\n<meta http-equiv=X-UA-Compatible content=\"IE=8,IE=9,IE=10\">\n<meta name=viewport content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0\"/>\n<style>body{font-family:sans-serif}.switch{cursor:pointer;width:5.5em;border:1px solid #5f645b;color:#fff;border-radius:.8em;margin-left:20px}.toggle,.state{margin:.1em;font-size:130%;font-weight:normal;text-align:center;float:left}.toggle{width:1.1em;background-color:#f5f5f5;color:#000;text-align:center;border:1px solid grey;border-radius:.5em;margin-right:.1em;margin-left:.2em}.state{padding-top:.05em;width:2em}.on{background-color:#56c94d}.off{background-color:#eceeef;color:#aaaab8}.on .toggle{float:right}.off .toggle{float:left}.clearfix{clear:both}table td{vertical-align:middle}table h2{margin:0;padding:0;font-weight:normal;margin-top:4px}</style>\n<script>function toggle(a){document.location.href=\"relay\"+a+\"/toggle\"};</script>\n</head>\n<body>\n<h1>Relay Manager</h1>\n<table border=0>\n<tr><td>\n<h2>Relay 1</h1>\n</td><td>\n<div class=\"switch {{relay1_state}}\" onclick=toggle(1)>\n<div class=toggle>&nbsp;</div>\n<div class=state>{{relay1_state}}</div><br class=clearfix />\n</div>\n</td></tr>\n</table>\n</body>\n</html>";
@@ -46,6 +45,9 @@ void handle_not_found() {
 int get_relay_pin(int relay_number){
     if(relay_number == 1){
         return relay1_pin;
+    }else
+    {
+      return 0;
     }
 
 }
@@ -53,6 +55,9 @@ int get_relay_pin(int relay_number){
 bool get_relay_state(int relay_number){
     if (relay_number == 1){
         return relay1_state;
+    }else
+    {
+      return 0;
     }
 
 }
@@ -81,10 +86,8 @@ void set_relay(int relay_number, bool state){
 
 void handle_relay() {
     int relay_number;
-    int relay_pin;
 
     if (server.uri() == "/api/relay1"){
-        relay_pin = relay1_pin;
         relay_number = 1;
     }
 
@@ -111,10 +114,8 @@ void handle_relay() {
 
 void handle_toggle(){
     int relay_number;
-    int relay_pin;
 
     if (server.uri() == "/relay1/toggle"){
-        relay_pin = relay1_pin;
         relay_number = 1;
     }
 
