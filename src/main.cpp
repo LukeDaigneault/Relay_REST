@@ -13,7 +13,34 @@ boolean relay1_state = false; // Turned on by default
 
 boolean relay_module_active = HIGH;  // Are the relays turned on by going HIGH or LOW?
 
-String page = "<!DOCTYPE html>\n<html>\n<head>\n<meta http-equiv=Content-Type content=\"text/html; charset=utf-8\" />\n<meta http-equiv=X-UA-Compatible content=\"IE=8,IE=9,IE=10\">\n<meta name=viewport content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0\"/>\n<style>body{font-family:sans-serif}.switch{cursor:pointer;width:5.5em;border:1px solid #5f645b;color:#fff;border-radius:.8em;margin-left:20px}.toggle,.state{margin:.1em;font-size:130%;font-weight:normal;text-align:center;float:left}.toggle{width:1.1em;background-color:#f5f5f5;color:#000;text-align:center;border:1px solid grey;border-radius:.5em;margin-right:.1em;margin-left:.2em}.state{padding-top:.05em;width:2em}.on{background-color:#56c94d}.off{background-color:#eceeef;color:#aaaab8}.on .toggle{float:right}.off .toggle{float:left}.clearfix{clear:both}table td{vertical-align:middle}table h2{margin:0;padding:0;font-weight:normal;margin-top:4px}</style>\n<script>function toggle(a){document.location.href=\"relay\"+a+\"/toggle\"};</script>\n</head>\n<body>\n<h1>Relay Manager</h1>\n<table border=0>\n<tr><td>\n<h2>Relay 1</h1>\n</td><td>\n<div class=\"switch {{relay1_state}}\" onclick=toggle(1)>\n<div class=toggle>&nbsp;</div>\n<div class=state>{{relay1_state}}</div><br class=clearfix />\n</div>\n</td></tr>\n</table>\n</body>\n</html>";
+String getPage(){
+String  page = "<!DOCTYPE html><html><head>";
+page +="<meta http-equiv=Content-Type content=\"text/html; charset=utf-8\" />";
+page +="<meta http-equiv=X-UA-Compatible content=\"IE=8,IE=9,IE=10\">";
+page +="<meta name=viewport content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0\"/>";
+page +="<style>body{font-family:sans-serif}.switch{cursor:pointer;width:5.5em;border:1px solid #5f645b;color:#fff;border-radius:.8em;margin-left:20px}.toggle,.state{margin:.1em;font-size:130%;font-weight:normal;text-align:center;float:left}.toggle{width:1.1em;background-color:#f5f5f5;color:#000;text-align:center;border:1px solid grey;border-radius:.5em;margin-right:.1em;margin-left:.2em}.state{padding-top:.05em;width:2em}.on{background-color:#56c94d}.off{background-color:#eceeef;color:#aaaab8}.on .toggle{float:right}.off .toggle{float:left}.clearfix{clear:both}table td{vertical-align:middle}table h2{margin:0;padding:0;font-weight:normal;margin-top:4px}</style>";
+page +="<script>function toggle(a){document.location.href=\"relay\"+a+\"/toggle\"};</script>";
+page +="</head>";
+page +="<body>";
+page +=  "<h1>Relay Manager</h1>";
+page +=  "<table border=0>";
+page +=   "<tr>";
+page +=     "<td>";
+page +=      "<h2>Relay 1</h1>";
+page +=     "</td>";
+page +=     "<td>";
+page +=      "<div class=\"switch {{relay1_state}}\" onclick=toggle(1)>";
+page +=       "<div class=toggle>&nbsp;</div>";
+page +=       "<div class=state>{{relay1_state}}</div>";
+page +=       "<br class=clearfix />";
+page +=      "</div>";
+page +=     "</td>";
+page +=    "</tr>";
+page +=   "</table>";
+page += "</body>";
+page +="</html>";
+return page;
+}
 
 String get_human_state(bool relay_state){
     if(relay_state == 1){
@@ -23,15 +50,15 @@ String get_human_state(bool relay_state){
     }
 }
 
-String get_page(){
-    String x = page;
+String update_page(){
+    String x = getPage();
     x.replace("{{relay1_state}}", get_human_state(relay1_state));
     return x;
 }
 
 void handle_root() {
     Serial.println("Request incoming...");
-    server.send(200, "text/html", get_page());
+    server.send(200, "text/html", update_page());
     delay(100);
     Serial.println("Request handled.");
 }
